@@ -1,4 +1,4 @@
-// Función que obtiene y procesa un conjunto desde un input HTML según su id
+// Función que obtiene y procesa un conjunto desde input HTML según id
 function obtenerConjunto(id) {
     // Separa los elementos por comas, elimina espacios innecesarios y los devuelve como arreglo
     return document.getElementById(id).value.split(',').map(e => e.trim());
@@ -6,10 +6,10 @@ function obtenerConjunto(id) {
 
 // Función principal que procesa un único conjunto ingresado por el usuario
 function procesarConjunto() {
-    const conjunto = obtenerConjunto('setInput'); // Obtiene el conjunto del input con id 'setInput'
-    const validacion = validarConjunto(conjunto); // Valida que el conjunto sea correcto
+    const conjunto = obtenerConjunto('setInput'); 
+    const validacion = validarConjunto(conjunto);
 
-    // Si la validación falla, se muestra el mensaje de error
+    // Retorno de validación fallida
     if (!validacion.esValido) {
         document.getElementById('result').innerHTML = validacion.mensaje;
         return;
@@ -23,7 +23,7 @@ function procesarConjunto() {
     const bell = calcularNumeroBell(conjunto.length);
     const particiones = particionesConjunto(conjunto);
 
-    // Se construye la salida HTML con todos los resultados obtenidos
+    // Salida HTML con todos los resultados obtenidos
     const output = `
         <h3>Subconjuntos:</h3><p>${subconjuntos.map(s => `[${s}]`).join(', ')}</p>
         <h3>Subconjuntos Propios:</h3><p>${propios.map(s => `[${s}]`).join(', ')}</p>
@@ -36,7 +36,7 @@ function procesarConjunto() {
     document.getElementById('result').innerHTML = output;
 }
 
-// Función que calcula el producto cartesiano entre dos conjuntos ingresados
+// Función del producto cartesiano 
 function calcularProductoCartesiano() {
     const A = obtenerConjunto('setInput');
     const B = obtenerConjunto('setInput2');
@@ -44,21 +44,20 @@ function calcularProductoCartesiano() {
     const validA = validarConjunto(A);
     const validB = validarConjunto(B);
 
-    // Verifica que ambos conjuntos sean válidos
+    // Verificación de conjuntos
     if (!validA.esValido || !validB.esValido) {
         document.getElementById('cartesianResult').innerHTML = "Todos los elementos deben ser solo letras o solo números.";
         return;
     }
 
-    // Genera el producto cartesiano como una combinación de pares ordenados
+    // Genera el producto cartesiano 
     const producto = A.flatMap(a => B.map(b => `(${a}, ${b})`));
     document.getElementById('cartesianResult').innerHTML =
         `<h3>Producto Cartesiano:</h3><p>${producto.join(', ')}</p>`;
 }
 
-// Función que genera todos los subconjuntos posibles de un conjunto dado
+// Función que genera todos los subconjuntos 
 function generarSubconjuntos(conjunto) {
-    // Se usa reduce para generar todas las combinaciones posibles
     return conjunto.reduce((subs, val) =>
         subs.concat(subs.map(sub => [val, ...sub])), [[]]);
 }
@@ -68,7 +67,6 @@ function calcularNumeroBell(n) {
     const bell = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
     bell[0][0] = 1;
 
-    // Algoritmo dinámico que llena la tabla de números de Bell
     for (let i = 1; i <= n; i++) {
         bell[i][0] = bell[i - 1][i - 1];
         for (let j = 1; j <= i; j++) {
@@ -85,7 +83,7 @@ function particionesConjunto(conjunto) {
 
     const resultado = [];
 
-    // Función recursiva que genera combinaciones de subconjuntos agrupados
+    // Función que genera combinaciones de subconjuntos agrupados
     const generarParticiones = (particion, index, sublista) => {
         if (index >= conjunto.length) {
             resultado.push(particion);
@@ -104,8 +102,7 @@ function validarConjunto(conjunto) {
     if (new Set(conjunto).size !== conjunto.length) {
         return { esValido: false, mensaje: "El conjunto contiene elementos repetidos." };
     }
-
-    // Verifica si todos los elementos son letras o todos son números
+    
     const sonLetras = conjunto.every(e => /^[a-zA-Z]+$/.test(e));
     const sonNumeros = conjunto.every(e => /^[0-9]+$/.test(e));
 
